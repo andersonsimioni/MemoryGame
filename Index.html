@@ -9,12 +9,20 @@
     <body>
         <audio autoplay hidden loop>
             <source src="/assets/song/Game-Menu_Looping.mp3" type="audio/mpeg">
-                Audio isn't supported. 
-           </audio>
+            Audio isn't supported. 
+        </audio>
+
+        <div id="win-message" class="d-none">
+            <div class="align-content-center" style="display: grid;">
+                <button class="btn-start-new-game btn-warning text-white p-2 rounded m-auto">Iniciar novo jogo</button>
+                <h1 class="text-warning text-center">Player <b id="winner-player"></b> WIN!</h1>
+                <img src="/assets/img/winner.png" width="400">                
+            </div>
+        </div>
 
         <section id="menu" style="margin-top: 10px;">
             <div class="bottom d-flex">
-                <button id="btn-start-new-game" class="btn-warning text-white p-2 rounded m-auto">Iniciar novo jogo</button>
+                <button class="btn-start-new-game btn-warning text-white p-2 rounded m-auto">Iniciar novo jogo</button>
             </div>
         </section>
 

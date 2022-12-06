@@ -1,5 +1,5 @@
 $(document).ready(()=>{
-
+    var cardsPairsCount = 0;
     var playerIndexRound = 0;
     var playersScore = [0,0];
 
@@ -15,16 +15,42 @@ $(document).ready(()=>{
         ["x/3 + 5"]: "9, 8",
         ["4x + 3"]: "3, 15"
     };
+
+    function resetValues(){
+        $('.gamecard').remove();
+        playersScore = Array.from(playersScore, c=>0);
+        playerIndexRound = 0;
+        updatePlayersScore();
+    }
+
+    function checkWin(){
+        if((playersScore[0]+playersScore[1])===parseInt(cardsPairsCount)){
+            $('#win-message').removeClass('d-none');
+            if(playersScore[0] === playersScore[1])
+                $('#winner-player')[0].innerHTML = '1 e 2';
+            else
+                $('#winner-player')[0].innerHTML = playersScore[0] > playersScore[1] ? '1' : '2';
+        }
+    }
     
+    function changePlayerRound(){
+        playerIndexRound = (playerIndexRound+1)%playersScore.length;
+        $('#player-rounde-index')[0].innerHTML = playerIndexRound+1;
+    }
+
     function updatePlayersScore(){
-        $('#gamescore-player-1').innerHTML = playersScore[0];
-        $('#gamescore-player-2').innerHTML = playersScore[1];
+        $('#gamescore-player-1')[0].innerHTML = playersScore[0];
+        $('#gamescore-player-2')[0].innerHTML = playersScore[1];
+    }
+
+    function getShowedCards(){
+        var cards = $('.gamecard-show');
+        cards = cards.filter(c=> !cards[c].classList.contains('gamecard-win'));
+        return cards;
     }
 
     function getShowedCardsCount(){
-        var cards = $('.gamecard-show');
-        cards = cards.filter(c=> !cards[c].classList.contains('gamecard-win'));
-        return cards.length;
+        return getShowedCards().length;
     }
 
     function shuffle(array) {
@@ -38,20 +64,10 @@ $(document).ready(()=>{
         return array;
     }
 
-    function newGame(){
-        var cardsNumber = prompt('Digite um número de pares de cartas entre 2 e 7');
-        if(cardsNumber == null) return;2
-        if(!parseInt(cardsNumber) || !(cardsNumber>=2 && cardsNumber<=7))
-        {   
-            alert('Por favor, preencha um valor correto!')
-            return;
-        }
-        console.log(`Gerando jogo com ${cardsNumber} pares de cartas..`);   
-        $('.gamecard').remove();
-
+    function createCards(){
         var newCards = [];
         for(var fx in fxs) {
-            if((newCards.length/2) != cardsNumber){
+            if((newCards.length/2) != cardsPairsCount){
                 newCards.push(`<div class="gamecard gamecard-hide"><b class="content">${fx}</b></div>`);
                 newCards.push(`<div class="gamecard gamecard-hide"><b class="content">${fxs[fx]}</b></div>`);
             }
@@ -62,6 +78,20 @@ $(document).ready(()=>{
             $('#gameboard-cards-div').append(newCards[card]);
         }
         $('.gamecard').click(cardClick);
+        $('#win-message').addClass('d-none');
+    }
+
+    function newGame(){
+        cardsPairsCount = prompt('Digite um número de pares de cartas entre 3 e 7');
+        if(cardsPairsCount == null) return;
+        if(!parseInt(cardsPairsCount) || !(cardsPairsCount>=3 && cardsPairsCount<=7))
+        {   
+            alert('Por favor, preencha um valor correto!')
+            return;
+        }
+
+        resetValues();
+        createCards();
     }
 
     function cardClick(){
@@ -72,10 +102,9 @@ $(document).ready(()=>{
         
         new Promise(p=>setTimeout(p,2000)).then(()=>{
             if(getShowedCardsCount() == 2){
-                var cardsContent = $('.gamecard-show .content');
-                cardsContent = cardsContent.filter(c=>!cardsContent[c].classList.contains('gamecard-win'));
-                var txt0 = cardsContent[0].innerHTML;
-                var txt1 = cardsContent[1].innerHTML;
+                var cardsShowed = getShowedCards();
+                var cardsContent = Array.from(cardsShowed, c=> c.childNodes[0].innerHTML);
+                var txt0 = cardsContent[0], txt1 = cardsContent[1];
                 var key = (fxs[txt0] !== undefined) ? txt0 : ((fxs[txt1] !== undefined) ? txt1 : undefined);
                 var val = (fxs[txt0] !== undefined) ? txt1 : ((fxs[txt1] !== undefined) ? txt0 : undefined);
                 
@@ -93,22 +122,22 @@ $(document).ready(()=>{
                         item.classList.toggle('gamecard-show');
                     }
                 });
-            }
 
-            playerIndexRound = (playerIndexRound+1)%playersScore.length;
-            $('#player-rounde-index').innerHTML = playerIndexRound+1;
-            updatePlayersScore();
+                updatePlayersScore();
+                changePlayerRound();
+                checkWin();
+            }
         });
     }
 
     function createEvents(){
-        $('#btn-start-new-game').click(newGame);
+        $('.btn-start-new-game').click(newGame);
         $('.gamecard').click(cardClick);
     }
 
     function init(){
         createEvents();
-        newGame();2
+        newGame();
     }
 
     init();
