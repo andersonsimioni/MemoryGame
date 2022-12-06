@@ -50,6 +50,9 @@ body{
     display: none;
 }
 
+.gamecard-win {
+    background-color: limegreen;
+}
 
 @keyframes keyframe-card-hide {
     0% { transform: rotateY(0deg); }
