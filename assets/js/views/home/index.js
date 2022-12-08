@@ -68,8 +68,8 @@ $(document).ready(()=>{
         var newCards = [];
         for(var fx in fxs) {
             if((newCards.length/2) != cardsPairsCount){
-                newCards.push(`<div class="gamecard gamecard-hide"><b class="content">${fx}</b></div>`);
-                newCards.push(`<div class="gamecard gamecard-hide"><b class="content">${fxs[fx]}</b></div>`);
+                newCards.push(`<div class="gamecard"><b class="content">${fx}</b></div>`);
+                newCards.push(`<div class="gamecard"><b class="content">${fxs[fx]}</b></div>`);
             }
         };
 
@@ -79,14 +79,21 @@ $(document).ready(()=>{
         }
         $('.gamecard').click(cardClick);
         $('#win-message').addClass('d-none');
+        
+        setTimeout(()=>{
+            $('.gamecard').addClass('gamecard-hide');
+        }, 5000);
     }
 
     function newGame(){
         cardsPairsCount = prompt('Digite um número de pares de cartas entre 3 e 7');
-        if(cardsPairsCount == null) return;
-        if(!parseInt(cardsPairsCount) || !(cardsPairsCount>=3 && cardsPairsCount<=7))
+        if( cardsPairsCount == null || 
+            cardsPairsCount == undefined || 
+            !parseInt(cardsPairsCount) || 
+            !(cardsPairsCount>=3 && cardsPairsCount<=7))
         {   
             alert('Por favor, preencha um valor correto!')
+            newGame();
             return;
         }
 
