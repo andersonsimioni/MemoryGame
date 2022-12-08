@@ -67,6 +67,15 @@ body{
     justify-content: center;
 }
 
+#footer{
+    background-color: #000000c7;
+    padding: 10px;
+    margin: 20px auto 0px auto;
+    border-radius: 10px;
+    border: 1px white solid;
+    max-width: 600px;
+}
+
 @keyframes keyframe-card-hide {
     0% { transform: rotateY(0deg); }
     50% 
